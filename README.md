@@ -1,6 +1,8 @@
 # pipelines-operator
 
-[WIP]
+### [WIP]
+
+This operator is an application to help deploy the minimal [`Kubeflow`](https://www.kubeflow.org/) components to run Pipelines.
 
 TBD:
 
@@ -13,26 +15,33 @@ TBD:
 
 To run the Pipeline Operator:
 
-1. install operator-sdk
+1. install [`operator-sdk`](https://github.com/operator-framework/operator-sdk)
 2. clone this repo
+```command line
+git clone https://github.com/adrian555/pipelines-operator.git
+```
 3. have a docker registry like `hub.docker.io`
 4. build and push the image
 ```command line
 operator-sdk build ffdlops/kfp:v0.0.1
 docker push ffdlops/kfp:v0.0.1
 ```
-5. modify `deploy/operator.yaml` to use the image built above
+5. modify [`deploy/operator.yaml`](https://github.com/adrian555/pipelines-operator/blob/master/deploy/operator.yaml) to use the image built above
 6. deploy the operator
 ```command line
+pushd pipelines-operator
 kubectl create -f deploy/crds/pipelines_v1alpha1_pipelines_crd.yaml
 kubectl create -f deploy/service_account.yaml
 kubectl create -f deploy/role.yaml
 kubectl create -f deploy/role_binding.yaml
 kubectl create -f deploy/operator.yaml
+popd
 ```
 7. create the customer resource to deploy Kubeflow Pipelines
 ```command line
+pushd pipelines-operator
 kubectl create -f deploy/crds/pipelines_v1alpha1_pipelines_cr.yaml
+popd
 ```
 
 Once this completes, query the services and run following commands to expose the Pipelines UI.
@@ -44,4 +53,4 @@ kubectl port-forward -n ${NAMESPACE} $(kubectl get pods -n ${NAMESPACE} --select
 
 Run `http://<hostname>:8080/pipeline` to load the UI.
 
-Note: this operator runs on `minikube`.
+Note: this operator runs on [`minikube`](https://kubernetes.io/docs/setup/minikube/). Refer to this [link](https://github.com/adrian555/DocsDump/blob/dev/minikube.md) for running `minikube` on Ubuntu host without a hypervisor.

@@ -1,0 +1,34 @@
+- name: create temporary kubeflow src dir
+  file: path="{{ pipelines.kubeflow_src }}" state=directory
+
+- name: download download.sh
+  get_url: url=https://raw.githubusercontent.com/kubeflow/kubeflow/{{ pipelines.version }}/scripts/download.sh
+           dest={{ pipelines.kubeflow_src }}/download.sh
+
+- name: exec download.sh to download kfctl.sh
+  shell: |
+    cd {{ pipelines.kubeflow_src }}
+    bash download.sh
+
+- name: set up and deploy kubeflow
+  ignore_errors: yes
+  environment:
+    DEFAULT_KUBEFLOW_COMPONENTS: "{{ pipelines.components }}"
+    K8S_NAMESPACE: "{{ pipelines.namespace }}"
+  shell: |
+    cd {{ pipelines.kubeflow_src }}
+    scripts/kfctl.sh init kfapp --platform none
+    cd kfapp
+    ../scripts/kfctl.sh generate k8s
+    ../scripts/kfctl.sh apply k8s
+
+- name: wait for service running
+  shell: |
+    state=""
+    retries=0
+    while [ "$state" != "Running" -a $retries -lt 300 ]
+    do
+        sleep 2
+        retries=`expr $retries + 1`
+        state=$(kubectl get pods -o=jsonpath='{range .items[*]}{.status.phase}{"\n"}{end}' -n {{ pipelines.namespace }} |uniq)
+    done

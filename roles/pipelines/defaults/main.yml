@@ -1,0 +1,6 @@
+pipelines:
+  kubeflow_src: /tmp/kubeflow-src
+  version: v0.4.1
+  components: '"ambassador","argo","pipeline"'
+  namespace: default
+

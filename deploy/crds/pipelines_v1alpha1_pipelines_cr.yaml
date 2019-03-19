@@ -1,0 +1,7 @@
+apiVersion: pipelines.ibm.com/v1alpha1
+kind: Pipelines
+metadata:
+  name: example-pipelines
+spec:
+  # Add fields here
+  size: 1

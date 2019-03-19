@@ -1,0 +1,5 @@
+---
+- version: v1alpha1
+  group: pipelines.ibm.com
+  kind: Pipelines
+  role: /opt/ansible/roles/pipelines

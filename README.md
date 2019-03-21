@@ -28,7 +28,9 @@ docker push ffdlops/kfp:v0.0.1
 
 5. modify [`deploy/role_binding.yaml`]() to use the namespace specified through `kubectl` command
 ```command line
+pushd pipelines-operator
 sed -i 's/namespace:.*$/namespace: kubeflow/g' deploy/role_binding.yaml
+popd
 ```
 replace `kubeflow` with the namespace the operator is to be deployed on.
 

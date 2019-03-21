@@ -5,7 +5,7 @@ metadata:
 subjects:
 - kind: ServiceAccount
   name: pipelines
-  namespace: default
+  namespace: kubeflow
 roleRef:
   kind: ClusterRole
   name: cluster-admin

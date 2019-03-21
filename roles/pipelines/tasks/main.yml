@@ -34,6 +34,8 @@
     ../scripts/kfctl.sh apply k8s
 
 - name: wait for service running
+  environment:
+    PATH: "{{ path.stdout }}:/opt/ansible"
   shell: |
     state=""
     retries=0

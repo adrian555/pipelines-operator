@@ -6,43 +6,52 @@ This operator is an application to help deploy the minimal [`Kubeflow`](https://
 
 TBD:
 
-* add parameters to specify the namespace, version etc
-* download `ks` and `kubectl` automatically
-* allow to specify the KUBECONFIG
-* fix the service account and role binding
 * figure out how to show the logs while the ansible playbook is running
 * test on `minishift` and then `IKS`.
 
 To run the Pipeline Operator:
 
 1. install [`operator-sdk`](https://github.com/operator-framework/operator-sdk)
+
 2. clone this repo
 ```command line
 git clone https://github.com/adrian555/pipelines-operator.git
 ```
+
 3. have a docker registry like `hub.docker.io`
+
 4. build and push the image
 ```command line
 operator-sdk build ffdlops/kfp:v0.0.1
 docker push ffdlops/kfp:v0.0.1
 ```
-5. modify [`deploy/operator.yaml`](https://github.com/adrian555/pipelines-operator/blob/master/deploy/operator.yaml) to use the image built above
-6. deploy the operator
+
+5. modify [`deploy/role_binding.yaml`]() to use the namespace specified through `kubectl` command
+```command line
+sed -i 's/namespace:.*$/namespace: kubeflow/g' deploy/role_binding.yaml
+```
+replace `kubeflow` with the namespace the operator is to be deployed on.
+
+6. modify [`deploy/operator.yaml`](https://github.com/adrian555/pipelines-operator/blob/master/deploy/operator.yaml) to use the image built above
+
+7. deploy the operator
 ```command line
 pushd pipelines-operator
 kubectl create -f deploy/crds/pipelines_v1alpha1_pipelines_crd.yaml
-kubectl create -f deploy/service_account.yaml
-kubectl create -f deploy/role.yaml
-kubectl create -f deploy/role_binding.yaml
-kubectl create -f deploy/operator.yaml
+kubectl create -f deploy/service_account.yaml -n kubeflow
+kubectl create -f deploy/role_binding.yaml -n kubeflow
+kubectl create -f deploy/operator.yaml -n kubeflow
 popd
 ```
-7. create the customer resource to deploy Kubeflow Pipelines
+replace `kubeflow` with your namespace to run on.
+
+8. create the customer resource to deploy Kubeflow Pipelines
 ```command line
 pushd pipelines-operator
-kubectl create -f deploy/crds/pipelines_v1alpha1_pipelines_cr.yaml
+kubectl create -f deploy/crds/pipelines_v1alpha1_pipelines_cr.yaml -n kubeflow
 popd
 ```
+replace `kubeflow` with your namespace to run on.
 
 Once this completes, query the services and run following commands to expose the Pipelines UI.
 

@@ -1,0 +1,13 @@
+- name: download ksonnet
+  get_url: url=https://github.com/ksonnet/ksonnet/releases/download/v{{ pipelines.ks_version }}/ks_{{ pipelines.ks_version }}_linux_amd64.tar.gz
+           dest={{ pipelines.kubeflow_src }}/ks.tgz
+
+- name: extract ks
+  ignore_errors: yes
+  shell: tar zxvf {{ pipelines.kubeflow_src }}/ks.tgz
+
+- name: copy ks
+  copy:
+    src: "ks_{{ pipelines.ks_version }}_linux_amd64/ks"
+    dest: "/opt/ansible/ks"
+    mode: 0744

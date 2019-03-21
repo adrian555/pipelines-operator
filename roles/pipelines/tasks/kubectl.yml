@@ -1,0 +1,2 @@
+- name: download kubectl
+  shell: curl -L -o /opt/ansible/kubectl https://storage.googleapis.com/kubernetes-release/release/{{ pipelines.kubectl_version }}/bin/linux/amd64/kubectl && chmod +x /opt/ansible/kubectl

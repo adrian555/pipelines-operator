@@ -1,32 +1,27 @@
 # pipelines-operator
 
-### [WIP]
-
-This operator is an application to help deploy the minimal [`Kubeflow`](https://www.kubeflow.org/) components to run Pipelines.
-
-TBD:
-
-* figure out how to show the logs while the ansible playbook is running
-* test on `minishift` and then `IKS`.
+This operator is an application to help deploy the [`Kubeflow`](https://www.kubeflow.org/) components to run Pipelines.
 
 To run the Pipeline Operator:
 
-1. install [`operator-sdk`](https://github.com/operator-framework/operator-sdk)
+1. follow the [`Quick Start`](https://github.com/operator-framework/operator-sdk) to install `operator-sdk`
 
-2. clone this repo
+2. follow the [`instruction`](https://github.com/operator-framework/operator-sdk/blob/master/doc/ansible/user-guide.md) to install the requirement for `ansible` type of operator
+
+3. clone this repo
 ```command line
 git clone https://github.com/adrian555/pipelines-operator.git
 ```
 
-3. have a docker registry like `hub.docker.io`
+4. have a docker registry like `hub.docker.io`
 
-4. build and push the image
+5. build and push the image
 ```command line
 operator-sdk build ffdlops/kfp:v0.0.1
 docker push ffdlops/kfp:v0.0.1
 ```
 
-5. modify [`deploy/role_binding.yaml`]() to use the namespace specified through `kubectl` command
+6. modify [`deploy/role_binding.yaml`]() to use the namespace specified through `kubectl` command
 ```command line
 pushd pipelines-operator
 sed -i 's/namespace:.*$/namespace: kubeflow/g' deploy/role_binding.yaml
@@ -34,9 +29,9 @@ popd
 ```
 replace `kubeflow` with the namespace the operator is to be deployed on.
 
-6. modify [`deploy/operator.yaml`](https://github.com/adrian555/pipelines-operator/blob/master/deploy/operator.yaml) to use the image built above
+7. modify [`deploy/operator.yaml`](https://github.com/adrian555/pipelines-operator/blob/master/deploy/operator.yaml) to use the image built above
 
-7. deploy the operator
+8. deploy the operator
 ```command line
 pushd pipelines-operator
 kubectl create -f deploy/crds/pipelines_v1alpha1_pipelines_crd.yaml
@@ -47,7 +42,7 @@ popd
 ```
 replace `kubeflow` with your namespace to run on.
 
-8. create the customer resource to deploy Kubeflow Pipelines
+9. create the customer resource to deploy Kubeflow Pipelines
 ```command line
 pushd pipelines-operator
 kubectl create -f deploy/crds/pipelines_v1alpha1_pipelines_cr.yaml -n kubeflow
@@ -63,5 +58,3 @@ kubectl port-forward -n ${NAMESPACE} $(kubectl get pods -n ${NAMESPACE} --select
 ```
 
 Run `http://<hostname>:8080/pipeline` to load the UI.
-
-Note: this operator runs on [`minikube`](https://kubernetes.io/docs/setup/minikube/). Refer to this [link](https://github.com/adrian555/DocsDump/blob/dev/minikube.md) for running `minikube` on Ubuntu host without a hypervisor.

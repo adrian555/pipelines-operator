@@ -1,6 +1,5 @@
 pipelines:
   kubeflow_src: /tmp/kubeflow-src
-  version: "{{ lookup('env','KUBEFLOW_VERSION') | default('0.4.1', true) }}"
   components: '"ambassador","argo","pipeline"'
   namespace: "{{ meta.namespace | default('default', true) }}"
   ks_version: "{{ lookup('env','KS_VERSION') | default('0.13.1', true) }}"

@@ -1,2 +1,8 @@
-- name: download kubectl
+- name: Check whether kubectl exists
+  stat:
+    path: /opt/ansible/kubectl
+  register: kubectl_stats
+
+- name: Download kubectl
   shell: curl -L -o /opt/ansible/kubectl https://storage.googleapis.com/kubernetes-release/release/{{ pipelines.kubectl_version }}/bin/linux/amd64/kubectl && chmod +x /opt/ansible/kubectl
+  when: kubectl_stats.stat.exists == False

@@ -58,3 +58,19 @@ kubectl port-forward -n ${NAMESPACE} $(kubectl get pods -n ${NAMESPACE} --select
 ```
 
 Run `http://<hostname>:8080/pipeline` to load the UI.
+
+## - Hack to work around the PVC limit on IKS shared account
+
+* Create a NFS dynamic StorageClass and PV --- this step can be done as part of the [jupyterlab-operator](https://github.com/adrian555/jupyterlab-operator) install
+
+* Set the NFS dynamic StorageClass as default
+
+```command line
+# make the current default StorageClass as non-default
+kubectl patch storageclass ibmc-file-bronze -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"false"}}}'
+
+# make a StorageClass as default
+kubectl patch storageclass nfs-dynamic -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
+```
+
+replace `ibmc-file-bronze` with name of the current default class and replace `nfs-dynamic` with name of the new default class.

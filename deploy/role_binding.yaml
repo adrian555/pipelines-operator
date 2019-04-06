@@ -8,5 +8,5 @@ subjects:
   namespace: default
 roleRef:
   kind: ClusterRole
-  name: pipelines-operator
+  name: cluster-admin
   apiGroup: rbac.authorization.k8s.io

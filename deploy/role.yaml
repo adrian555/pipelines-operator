@@ -10,6 +10,7 @@ rules:
   - pods
   - services
   - endpoints
+  - persistentvolumes
   - persistentvolumeclaims
   - events
   - configmaps
@@ -20,8 +21,22 @@ rules:
   - ""
   resources:
   - namespaces
+  - serviceaccounts
+  - pods/portforward
   verbs:
   - '*'
+- apiGroups:
+  - "rbac.authorization.k8s.io"
+  resources:
+  - clusterroles
+  - clusterrolebindings
+  - roles
+  - rolebindings
+  verbs:
+  - get
+  - list
+  - create
+  - delete
 - apiGroups:
   - apps
   resources:
@@ -47,8 +62,22 @@ rules:
   verbs:
   - update
 - apiGroups:
+  - extensions
+  resources:
+  - ingresses
+  - podsecuritypolicies
+  - deployments
+  verbs:
+  - '*'
+- apiGroups:
   - openaihub.ibm.com
   resources:
   - '*'
+  verbs:
+  - '*'
+- apiGroups:
+  - app.k8s.io
+  resources:
+  - applications
   verbs:
   - '*'

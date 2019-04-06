@@ -11,21 +11,23 @@
 - name: download kubectl
   include: kubectl.yml
 
-- name: download download.sh
-  get_url: url=https://raw.githubusercontent.com/kubeflow/kubeflow/master/scripts/download.sh
-           dest={{ pipelines.kubeflow_src }}/download.sh
+- name: Check whether download.sh exists
+  stat:
+    path: "{{ pipelines.kubeflow_src }}/download.sh"
+  register: kubeflow_stats
 
-- name: exec download.sh to download kfctl.sh
-  shell: |
-    cd {{ pipelines.kubeflow_src }}
-    bash download.sh
-
-- name: hack to update a couple of files
-  shell: |
-    cd {{ pipelines.kubeflow_src }}
-    cp -f /opt/ansible/patched/argo.libsonnet kubeflow/argo
-    cp -f /opt/ansible/patched/argo.jsonnet kubeflow/argo/prototypes
-    cp -f /opt/ansible/patched/pipeline-apiserver.libsonnet kubeflow/pipeline
+- name: download kubeflow scripts
+  block:
+    - get_url: 
+        url: https://raw.githubusercontent.com/kubeflow/kubeflow/master/scripts/download.sh
+        dest: "{{ pipelines.kubeflow_src }}/download.sh"
+    - shell: |
+        cd {{ pipelines.kubeflow_src }}
+        bash download.sh
+        cp -f /opt/ansible/patched/argo.libsonnet kubeflow/argo
+        cp -f /opt/ansible/patched/argo.jsonnet kubeflow/argo/prototypes
+        cp -f /opt/ansible/patched/pipeline-apiserver.libsonnet kubeflow/pipeline        
+  when: kubeflow_stats.stat.exists == False
 
 - name: set up and generate k8s application
   ignore_errors: yes
@@ -38,6 +40,7 @@
     scripts/kfctl.sh init kfapp --platform none
     cd kfapp
     ../scripts/kfctl.sh generate k8s
+  when: kubeflow_stats.stat.exists == False
 
 - name: hack to set up specific environment etc
   environment:
@@ -49,6 +52,7 @@
     ks param set argo containerRuntimeExecutor k8sapi
     ks param set argo executorImage tomcli/argoexec:containerd
     ks param set argo workflowControllerImage tomcli/workflow-controller:containerd
+  when: kubeflow_stats.stat.exists == False
 
 - name: deploy kubeflow pipelines service
   ignore_errors: yes

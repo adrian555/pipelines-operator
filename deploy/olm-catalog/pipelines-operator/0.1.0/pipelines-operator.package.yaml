@@ -1,4 +1,0 @@
-packageName: pipelines
-channels:
-- name: alpha
-  currentCSV: pipelines-operator.v0.1.0

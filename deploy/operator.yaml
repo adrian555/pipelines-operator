@@ -1,18 +1,18 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: pipelines
+  name: pipelines-operator
 spec:
   replicas: 1
   selector:
     matchLabels:
-      name: pipelines
+      name: pipelines-operator
   template:
     metadata:
       labels:
-        name: pipelines
+        name: pipelines-operator
     spec:
-      serviceAccountName: pipelines
+      serviceAccountName: pipelines-operator
       containers:
         - name: ansible
           command:
@@ -20,16 +20,16 @@ spec:
           - /tmp/ansible-operator/runner
           - stdout
           # Replace this with the built image name
-          image: "ffdlops/kfp:v0.0.3"
-          imagePullPolicy: "Always"
+          image: ffdlops/kfp:v0.0.1
+          imagePullPolicy: Always
           volumeMounts:
           - mountPath: /tmp/ansible-operator/runner
             name: runner
             readOnly: true
         - name: operator
           # Replace this with the built image name
-          image: "ffdlops/kfp:v0.0.3"
-          imagePullPolicy: "Always"
+          image: ffdlops/kfp:v0.0.1
+          imagePullPolicy: Always
           volumeMounts:
           - mountPath: /tmp/ansible-operator/runner
             name: runner
@@ -43,7 +43,7 @@ spec:
                 fieldRef:
                   fieldPath: metadata.name
             - name: OPERATOR_NAME
-              value: "pipelines"
+              value: "pipelines-operator"
       volumes:
         - name: runner
           emptyDir: {}

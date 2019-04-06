@@ -6,17 +6,17 @@
   vars:
     ansible_python_interpreter: '{{ ansible_playbook_python }}'
     deploy_dir: "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}/deploy"
-    image_name: pipelines.ibm.com/pipelines:testing
-    custom_resource: "{{ lookup('file', '/'.join([deploy_dir, 'crds/pipelines_v1alpha1_pipelines_cr.yaml'])) | from_yaml }}"
+    image_name: openaihub.ibm.com/pipelines-operator:testing
+    custom_resource: "{{ lookup('file', '/'.join([deploy_dir, 'crds/openaihub_v1alpha1_pipelines_cr.yaml'])) | from_yaml }}"
   tasks:
-  - name: Create the pipelines.ibm.com/v1alpha1.Pipelines
+  - name: Create the openaihub.ibm.com/v1alpha1.Pipelines
     k8s:
       namespace: '{{ namespace }}'
-      definition: "{{ lookup('file', '/'.join([deploy_dir, 'crds/pipelines_v1alpha1_pipelines_cr.yaml'])) }}"
+      definition: "{{ lookup('file', '/'.join([deploy_dir, 'crds/openaihub_v1alpha1_pipelines_cr.yaml'])) }}"
 
   - name: Get the newly created Custom Resource
     debug:
-      msg: "{{ lookup('k8s', group='pipelines.ibm.com', api_version='v1alpha1', kind='Pipelines', namespace=namespace, resource_name=custom_resource.metadata.name) }}"
+      msg: "{{ lookup('k8s', group='openaihub.ibm.com', api_version='v1alpha1', kind='Pipelines', namespace=namespace, resource_name=custom_resource.metadata.name) }}"
 
   - name: Wait 40s for reconciliation to run
     k8s_facts:

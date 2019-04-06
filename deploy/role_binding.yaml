@@ -1,12 +1,12 @@
 kind: ClusterRoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
-  name: pipelines
+  name: pipelines-operator
 subjects:
 - kind: ServiceAccount
-  name: pipelines
-  namespace: kfp
+  name: pipelines-operator
+  namespace: default
 roleRef:
   kind: ClusterRole
-  name: cluster-admin
+  name: pipelines-operator
   apiGroup: rbac.authorization.k8s.io

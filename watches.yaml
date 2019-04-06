@@ -1,5 +1,5 @@
 ---
 - version: v1alpha1
-  group: pipelines.ibm.com
+  group: openaihub.ibm.com
   kind: Pipelines
   role: /opt/ansible/roles/pipelines

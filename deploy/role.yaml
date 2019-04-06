@@ -2,7 +2,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
   creationTimestamp: null
-  name: pipelines
+  name: pipelines-operator
 rules:
 - apiGroups:
   - ""
@@ -41,13 +41,13 @@ rules:
 - apiGroups:
   - apps
   resourceNames:
-  - pipelines
+  - pipelines-operator
   resources:
   - deployments/finalizers
   verbs:
   - update
 - apiGroups:
-  - pipelines.ibm.com
+  - openaihub.ibm.com
   resources:
   - '*'
   verbs:

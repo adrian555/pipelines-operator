@@ -48,10 +48,10 @@
     PATH: "{{ path.stdout }}:/opt/ansible"
   shell: |
     cd {{ pipelines.kubeflow_src }}/kfapp/ks_app
-    ks param set ambassador ambassadorServiceType NodePort
-    ks param set argo containerRuntimeExecutor pns
-    ks param set argo executorImage tomcli/argoexec:containerd
-    ks param set argo workflowControllerImage tomcli/workflow-controller:containerd
+    ks param set ambassador ambassadorServiceType {{ pipelines.ambassador_service_type }}
+    ks param set argo containerRuntimeExecutor {{ pipelines.container_runtime_executor }}
+    ks param set argo executorImage {{ pipelines.executor_image }}
+    ks param set argo workflowControllerImage {{ pipelines.workflow_controller_image }}
   when: kubeflow_stats.stat.exists == False
 
 - name: deploy kubeflow pipelines service

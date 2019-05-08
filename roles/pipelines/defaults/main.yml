@@ -2,9 +2,11 @@ pipelines:
   kubeflow_src: /tmp/kubeflow-src
   components: '"ambassador","argo","pipeline"'
   namespace: "{{ meta.namespace | default('default', true) }}"
+  kubeflow_tag: "{{ lookup('env','KUBEFLOW_TAG') | default('fcb9839', true) }}"
   ks_version: "{{ lookup('env','KS_VERSION') | default('0.13.1', true) }}"
   kubectl_version: "{{ lookup('env','KUBECTL_VERSION') | default('v1.13.4', true) }}"
   ambassador_service_type: "{{ lookup('env','AMBASSADOR_SERVICE_TYPE') | default('NodePort', true) }}"
+  ui_image: "{{ lookup('env','UI_IMAGE') | default('argoproj/argoui:v2.3.0-rc2', true) }}"
   container_runtime_executor: "{{ lookup('env','CONTAINER_RUNTIME_EXECUTOR') | default('pns', true) }}"
   executor_image: "{{ lookup('env','EXECUTOR_IMAGE') | default('tomcli/argoexec:containerd', true) }}"
   workflow_controller_image: "{{ lookup('env','WORKFLOW_CONTROLLER_IMAGE') | default('tomcli/workflow-controller:containerd', true) }}"

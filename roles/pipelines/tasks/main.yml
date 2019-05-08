@@ -11,22 +11,16 @@
 - name: download kubectl
   include: kubectl.yml
 
-- name: Check whether download.sh exists
+- name: Check whether kubeflow folders exists
   stat:
-    path: "{{ pipelines.kubeflow_src }}/download.sh"
+    path: "{{ pipelines.kubeflow_src }}/kubeflow"
   register: kubeflow_stats
 
-- name: download kubeflow scripts
+- name: extract kubeflow folders
   block:
-    - get_url: 
-        url: https://raw.githubusercontent.com/kubeflow/kubeflow/master/scripts/download.sh
-        dest: "{{ pipelines.kubeflow_src }}/download.sh"
     - shell: |
         cd {{ pipelines.kubeflow_src }}
-        bash download.sh
-        cp -f /opt/ansible/patched/argo.libsonnet kubeflow/argo
-        cp -f /opt/ansible/patched/argo.jsonnet kubeflow/argo/prototypes
-        cp -f /opt/ansible/patched/pipeline-apiserver.libsonnet kubeflow/pipeline        
+        tar zxvf /opt/ansible/patched/custom-kubeflow.tgz
   when: kubeflow_stats.stat.exists == False
 
 - name: set up and generate k8s application

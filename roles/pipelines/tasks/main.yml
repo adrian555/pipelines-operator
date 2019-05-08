@@ -49,7 +49,7 @@
   shell: |
     cd {{ pipelines.kubeflow_src }}/kfapp/ks_app
     ks param set ambassador ambassadorServiceType NodePort
-    ks param set argo containerRuntimeExecutor k8sapi
+    ks param set argo containerRuntimeExecutor pns
     ks param set argo executorImage tomcli/argoexec:containerd
     ks param set argo workflowControllerImage tomcli/workflow-controller:containerd
   when: kubeflow_stats.stat.exists == False

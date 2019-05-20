@@ -5,8 +5,8 @@ metadata:
 subjects:
 - kind: ServiceAccount
   name: pipelines-operator
-  namespace: default
+  namespace: kubeflow
 roleRef:
   kind: ClusterRole
-  name: cluster-admin
+  name: pipelines-operator
   apiGroup: rbac.authorization.k8s.io

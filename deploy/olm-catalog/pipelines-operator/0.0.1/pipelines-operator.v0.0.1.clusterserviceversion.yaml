@@ -24,19 +24,32 @@ spec:
           - pods
           - services
           - endpoints
-          - persistentvolumes
           - persistentvolumeclaims
           - events
           - configmaps
           - secrets
+          - pods
+          - pods/exec
+          - pods/log
+          - services
+          - deployments
+          - replicasets
+          - namespaces
+          - serviceaccounts
           verbs:
           - '*'
         - apiGroups:
-          - ""
+          - snapshot.storage.k8s.io
           resources:
-          - namespaces
-          - serviceaccounts
-          - pods/portforward
+          - volumesnapshots
+          verbs:
+          - get
+          - create
+          - delete
+        - apiGroups:
+          - argoproj.io
+          resources:
+          - workflows
           verbs:
           - '*'
         - apiGroups:
@@ -47,10 +60,7 @@ spec:
           - roles
           - rolebindings
           verbs:
-          - get
-          - list
-          - create
-          - delete
+          - '*'
         - apiGroups:
           - apps
           resources:
@@ -61,12 +71,42 @@ spec:
           verbs:
           - '*'
         - apiGroups:
+          - metacontroller.k8s.io
+          resources:
+          - compositecontrollers
+          verbs:
+          - '*'
+        - apiGroups:
+          - apiextensions.k8s.io
+          resources:
+          - customresourcedefinitions
+          verbs:
+          - '*'
+        - apiGroups:
+          - kubeflow.org
+          resources:
+          - '*'
+          verbs:
+          - '*'
+        - apiGroups:
+          - batch
+          resources:
+          - jobs
+          verbs:
+          - '*'
+        - apiGroups:
           - monitoring.coreos.com
           resources:
           - servicemonitors
           verbs:
           - get
           - create
+        - apiGroups:
+          - apiextensions.k8s.io
+          resources:
+          - customresourcedefinitions
+          verbs:
+          - '*'
         - apiGroups:
           - apps
           resourceNames:
@@ -81,6 +121,7 @@ spec:
           - ingresses
           - podsecuritypolicies
           - deployments
+          - replicasets
           verbs:
           - '*'
         - apiGroups:
@@ -133,6 +174,8 @@ spec:
                       fieldPath: metadata.name
                 - name: OPERATOR_NAME
                   value: pipelines-operator
+                - name: KUBEFLOW_TAG
+                  value: fcb9839
                 image: ffdlops/kfp:v0.0.1
                 imagePullPolicy: Always
                 name: operator

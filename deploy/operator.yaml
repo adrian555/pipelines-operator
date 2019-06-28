@@ -44,6 +44,8 @@ spec:
                   fieldPath: metadata.name
             - name: OPERATOR_NAME
               value: "pipelines-operator"
+            - name: KUBEFLOW_TAG
+              value: "fcb9839"
       volumes:
         - name: runner
           emptyDir: {}
